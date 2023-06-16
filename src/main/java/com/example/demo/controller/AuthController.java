@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.ChangeAvatar;
 import com.example.demo.dto.request.SignInForm;
 import com.example.demo.dto.request.SignUpForm;
 import com.example.demo.dto.response.JwtResponse;
@@ -8,6 +9,7 @@ import com.example.demo.model.Role;
 import com.example.demo.model.RoleName;
 import com.example.demo.model.User;
 import com.example.demo.security.jwt.JwtProvider;
+import com.example.demo.security.jwt.JwtTokenFilter;
 import com.example.demo.security.userprincal.UserPrinciple;
 import com.example.demo.service.impl.RoleServiceImpl;
 import com.example.demo.service.impl.UserServiceImpl;
@@ -18,9 +20,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,6 +44,8 @@ public class AuthController {
     AuthenticationManager authenticationManager;
     @Autowired
     JwtProvider jwtProvider;
+    @Autowired
+    JwtTokenFilter jwtTokenFilter;
     @PostMapping("/signup")
     public ResponseEntity<?> register(@Valid @RequestBody SignUpForm signUpForm){
         if(userService.existsByUsername(signUpForm.getUsername())){
@@ -83,5 +89,18 @@ public class AuthController {
         //--> Lấy ra 1 userPrinciple để đổ về fontend
         UserPrinciple userPrinciple = (UserPrinciple) authentication.getPrincipal();
         return ResponseEntity.ok(new JwtResponse(token, userPrinciple.getName(), userPrinciple.getAvatar(), userPrinciple.getAuthorities()));
+    }
+    @PutMapping("/change-avatar")
+    public ResponseEntity<?> changeAvatar(HttpServletRequest request, @Valid @RequestBody ChangeAvatar changeAvatar){
+        String token = jwtTokenFilter.getJwt(request);
+        String username = jwtProvider.getUerNameFromToken(token);
+        User user = userService.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("Username not found! "));
+        if (changeAvatar.getAvatar() == null||changeAvatar.getAvatar().trim().equals("")) {
+            return new ResponseEntity<>(new ResponMessage("no"), HttpStatus.OK);
+        }else {
+            user.setAvatar(changeAvatar.getAvatar());
+            userService.save(user);
+            return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+        }
     }
 }

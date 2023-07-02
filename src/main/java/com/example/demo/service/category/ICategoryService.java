@@ -9,4 +9,6 @@ public interface ICategoryService extends IGenericService<Category> {
     boolean existsByName(String name);
 
     Optional<Category> findById(Long id);
+
+    void deleteById(Long id);
 }

@@ -1,30 +1,30 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Entity
-@Table(name="categories")
-//  @NoArgsConstructor --> để ko ko cần tạo getter/setter
+@Table(name = "likes")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Category {
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NonNull
-    @Column(unique = true)
-    private String name;
-    private String avatar;
     @ManyToOne
     private User user;
-//    void method(){
-//        Comment comment = new Comment();
-//        Comment.name
-//    }
+    @ManyToOne
+    @JsonIgnore
+    private Film film;
+
+    public Like(User user, Film film) {
+        this.user = user;
+        this.film = film;
+    }
 }

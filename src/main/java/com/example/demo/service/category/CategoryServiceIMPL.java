@@ -29,6 +29,7 @@ public class CategoryServiceIMPL implements ICategoryService{
         User user = userDetailService.getCurrentUser();
         category.setUser(user);
         categoryRepository.save(category);
+
     }
 
     @Override
@@ -44,5 +45,10 @@ public class CategoryServiceIMPL implements ICategoryService{
     @Override
     public Optional<Category> findById(Long id) {
         return categoryRepository.findById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        categoryRepository.deleteById(id);
     }
 }

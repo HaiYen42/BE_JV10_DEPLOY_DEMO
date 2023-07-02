@@ -11,8 +11,8 @@ import com.example.demo.model.User;
 import com.example.demo.security.jwt.JwtProvider;
 import com.example.demo.security.jwt.JwtTokenFilter;
 import com.example.demo.security.userprincal.UserPrinciple;
-import com.example.demo.service.impl.RoleServiceImpl;
-import com.example.demo.service.impl.UserServiceImpl;
+import com.example.demo.service.implUser.RoleServiceImpl;
+import com.example.demo.service.implUser.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,7 +80,7 @@ public class AuthController {
     }
     @PostMapping("/signin")
     public ResponseEntity<?> login(@Valid @RequestBody SignInForm signInForm){
-        // B3: Sẽ chạy qua các hàm Authentication của hệ thống để build
+        // B3: Sẽ chạy qua các hàm Authentication của hệ thống để build UserPrinciple
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInForm.getUsername(), signInForm.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);

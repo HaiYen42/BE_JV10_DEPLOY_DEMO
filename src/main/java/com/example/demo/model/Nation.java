@@ -3,28 +3,28 @@ package com.example.demo.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name="categories")
-//  @NoArgsConstructor --> để ko ko cần tạo getter/setter
+@Table(name = "nation")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Category {
+public class Nation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NonNull
     @Column(unique = true)
+    @NotNull
+    @NotBlank
     private String name;
-    private String avatar;
     @ManyToOne
     private User user;
-//    void method(){
-//        Comment comment = new Comment();
-//        Comment.name
-//    }
+
+    public Nation(String name) {
+        this.name = name;
+    }
 }

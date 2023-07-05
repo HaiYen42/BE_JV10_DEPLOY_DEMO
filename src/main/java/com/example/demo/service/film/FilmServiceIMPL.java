@@ -65,9 +65,12 @@ public class FilmServiceIMPL implements IFilmService{
         List<Film> filmList = filmRepository.findAll();
         List<Film> filmsByCategory = new ArrayList<>();
         for (int i = 0; i < filmList.size(); i++) {
-            if (filmList.get(i).getCategory().getId()== categoryId){
-                filmsByCategory.add(filmList.get(i));
+            for (int j = 0; j < filmList.get(i).getCategoryList().size(); j++) {
+                if (filmList.get(i).getCategoryList().get(j).getId().longValue()== categoryId.longValue()){
+                    filmsByCategory.add(filmList.get(i));
+                }
             }
+
         }
         return filmsByCategory;
     }

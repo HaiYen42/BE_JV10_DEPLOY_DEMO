@@ -23,8 +23,5 @@ public class Category {
     private String avatar;
     @ManyToOne
     private User user;
-//    void method(){
-//        Comment comment = new Comment();
-//        Comment.name
-//    }
+
 }

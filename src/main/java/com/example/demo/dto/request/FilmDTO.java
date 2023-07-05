@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -33,7 +35,7 @@ public class FilmDTO {
     @NotBlank
     private String filmLink;
     @NotNull
-    private Category category;
+    private List<Category>  categoryList;
 
     @NotNull
     private Nation nation;

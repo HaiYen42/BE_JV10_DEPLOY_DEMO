@@ -49,26 +49,23 @@ public class FilmController {
         if (!film.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+//        film.get().setView(film.get().getView() + 1);
+//        filmService.saveView(film.get());
+        return new ResponseEntity<>(film, HttpStatus.OK);
+    }
+    @GetMapping("/view/{id}")
+    private ResponseEntity<?> increaseView(@PathVariable Long id) {
+        Optional<Film> film = filmService.findById(id);
+//        User user = userDetailService.getCurrentUser();
+//        List<Film> films = null;
+        if (!film.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         film.get().setView(film.get().getView() + 1);
         filmService.saveView(film.get());
         return new ResponseEntity<>(film, HttpStatus.OK);
     }
 
-//    @GetMapping("/history")
-//    private ResponseEntity<?> getListHistoryOfUser() {
-//        User user = userDetailService.getCurrentUser();
-//        List<Film> films = null;
-//        if (user == null) {
-//            return new ResponseEntity<>(new ResponMessage("user not found!"), HttpStatus.OK);
-//        }
-//        Optional<History> history = historyService.findByUser_id(user.getId());
-//        if (!history.isPresent()) {
-//            return new ResponseEntity<>(new ResponMessage("history not found!"), HttpStatus.OK);
-//        }
-//        films = history.get().getHistory();
-//        return new ResponseEntity<>(films, HttpStatus.OK);
-//
-//    }
 
     @GetMapping("/page")
     private ResponseEntity<?> pageFilm(Pageable pageable) {
@@ -83,7 +80,7 @@ public class FilmController {
         if (!role.equals("ADMIN")) {
             return new ResponseEntity<>(new ResponMessage("access_denied"), HttpStatus.OK);
         }
-        Film film = new Film(filmDTO.getName(), filmDTO.getAvatar(), filmDTO.getDescription(), filmDTO.getFilmLink(), filmDTO.getCategory(), filmDTO.getNation());
+        Film film = new Film(filmDTO.getName(), filmDTO.getAvatar(), filmDTO.getDescription(), filmDTO.getFilmLink(), filmDTO.getCategoryList(), filmDTO.getNation());
         filmService.save(film);
         return new ResponseEntity<>(new ResponMessage("create_success"), HttpStatus.OK);
     }
@@ -93,7 +90,7 @@ public class FilmController {
         String role ="";
         User user = userDetailService.getCurrentUser();
         role = userService.getUserRole(user);
-        if (role.equals("ADMIN")) {
+        if (!role.equals("ADMIN")) {
             return new ResponseEntity<>(new ResponMessage("access_denied"), HttpStatus.OK);
         }
         Optional<Film> film1 = filmService.findById(id);
@@ -104,7 +101,6 @@ public class FilmController {
                 film.getAvatar().equals(film1.get().getAvatar()) &&
                 film.getDescription().equals(film1.get().getDescription()) &&
                 film.getFilmLink().equals(film1.get().getFilmLink()) &&
-                film.getCategory().getId() == film1.get().getCategory().getId() &&
                 film.getNation().getId() == film1.get().getNation().getId()) {
             return new ResponseEntity<>(new ResponMessage("no_change"), HttpStatus.OK);
         }
@@ -112,7 +108,7 @@ public class FilmController {
         film1.get().setAvatar(film.getAvatar());
         film1.get().setDescription(film.getDescription());
         film1.get().setFilmLink(film.getFilmLink());
-        film1.get().setCategory(film.getCategory());
+        film1.get().setCategoryList(film.getCategoryList());
         film1.get().setNation(film.getNation());
         filmService.save(film1.get());
         return new ResponseEntity<>(new ResponMessage("update_success"), HttpStatus.OK);
@@ -123,8 +119,8 @@ public class FilmController {
         String role ="";
         User user = userDetailService.getCurrentUser();
         role = userService.getUserRole(user);
-        if (role.equals("ADMIN")) {
-            return new ResponseEntity<>(new ResponMessage("update_sucess"), HttpStatus.OK);
+        if (!role.equals("ADMIN")) {
+            return new ResponseEntity<>(new ResponMessage("access_denied"), HttpStatus.OK);
         }
         Optional<Film> film = filmService.findById(id);
         if (!film.isPresent()) {

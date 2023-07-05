@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,15 +46,16 @@ public class Film {
     @JoinColumn(name = "film_id")
     private List<Comment> commentList;
 
-    @ManyToOne
-    private Category category;
+    @ManyToMany
+    @JoinTable(name = "film_category", joinColumns = @JoinColumn(name = "film_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categoryList = new ArrayList<>();
 
-    public Film(String name, String avatar, String description, String filmLink, Category category, Nation nation) {
+    public Film(String name, String avatar, String description, String filmLink, List<Category> category, Nation nation) {
         this.name = name;
         this.avatar = avatar;
         this.description = description;
         this.filmLink = filmLink;
-        this.category = category;
+        this.categoryList = category;
         this.nation = nation;
     }
 }

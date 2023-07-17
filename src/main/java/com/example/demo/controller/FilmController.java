@@ -4,17 +4,14 @@ package com.example.demo.controller;
 import com.example.demo.dto.request.FilmDTO;
 import com.example.demo.dto.response.ResponMessage;
 import com.example.demo.model.Film;
-import com.example.demo.model.History;
 import com.example.demo.model.User;
 import com.example.demo.security.userprincal.UserDetailService;
 import com.example.demo.service.film.IFilmService;
-import com.example.demo.service.history.IHistoryService;
 import com.example.demo.service.implUser.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,8 +30,7 @@ public class FilmController {
     private UserDetailService userDetailService;
     @Autowired
     private IUserService userService;
-    @Autowired
-    private IHistoryService historyService;
+
 
     @GetMapping
     private ResponseEntity<?> listFilm() {
